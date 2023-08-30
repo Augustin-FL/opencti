@@ -33,8 +33,7 @@ import { AuditLine_node$data } from './__generated__/AuditLine_node.graphql';
 import { AuditLineDummy } from './AuditLine';
 import useAuth from '../../../../../utils/hooks/useAuth';
 import { useFormatter } from '../../../../../components/i18n';
-
-const LOCAL_STORAGE_KEY = 'view-audit';
+import { initialFilterGroup } from '../../../../../utils/filters/filtersUtils';
 
 const useStyles = makeStyles<Theme>(() => ({
   container: {
@@ -42,6 +41,8 @@ const useStyles = makeStyles<Theme>(() => ({
     padding: '0 200px 50px 0',
   },
 }));
+
+const LOCAL_STORAGE_KEY = 'audit';
 
 const Audit = () => {
   const classes = useStyles();
@@ -55,7 +56,7 @@ const Audit = () => {
     LOCAL_STORAGE_KEY,
     {
       numberOfElements: { number: 0, symbol: '', original: 0 },
-      filters: {},
+      filters: initialFilterGroup,
       searchTerm: '',
       sortBy: 'timestamp',
       orderAsc: false,
@@ -65,7 +66,7 @@ const Audit = () => {
     },
   );
   const { numberOfElements, filters, searchTerm, sortBy, orderAsc, types } = viewStorage;
-  const { selectedElements, deSelectedElements, selectAll, onToggleEntity } = useEntityToggle<AuditLine_node$data>('view-audit');
+  const { selectedElements, deSelectedElements, selectAll, onToggleEntity } = useEntityToggle<AuditLine_node$data>(LOCAL_STORAGE_KEY);
   const dataColumns = {
     timestamp: {
       label: 'Date',
@@ -134,6 +135,8 @@ const Audit = () => {
         handleSearch={storageHelpers.handleSearch}
         handleAddFilter={storageHelpers.handleAddFilter}
         handleRemoveFilter={storageHelpers.handleRemoveFilter}
+        handleSwitchGlobalMode={storageHelpers.handleSwitchGlobalMode}
+        handleSwitchLocalMode={storageHelpers.handleSwitchLocalMode}
         selectAll={selectAll}
         extraFields={extraFields}
         keyword={searchTerm}
@@ -145,8 +148,7 @@ const Audit = () => {
           'members_user',
           'members_organization',
           'members_group',
-          'created_start_date',
-          'created_end_date',
+          'created',
         ]}
       >
         {queryRef && (
