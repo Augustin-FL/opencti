@@ -11,6 +11,7 @@ import { externalReferences } from './stixRefRelationship';
 import { telemetry } from '../config/tracing';
 import type { AttributeDefinition } from './attribute-definition';
 import type { EditInput } from '../generated/graphql';
+import { schemaRelationsRefDefinition } from './schema-relationsRef';
 
 const ajv = new Ajv();
 
@@ -20,13 +21,13 @@ export const validateFormatSchemaAttribute = (
   instanceType: string,
   attributeName: string,
   attributeDefinition: AttributeDefinition | undefined,
-  value: unknown
+  value: unknown,
 ) => {
   if (isJsonAttribute(attributeName)) {
     if (!attributeDefinition) {
       throw ValidationError(attributeName, {
         message: 'This attribute is not declared for this type',
-        data: { attribute: attributeName, entityType: instanceType }
+        data: { attribute: attributeName, entityType: instanceType },
       });
     }
     if (attributeDefinition.schemaDef) {
@@ -59,21 +60,30 @@ const validateMandatoryAttributes = (
   input: Record<string, unknown>,
   entitySetting: BasicStoreEntityEntitySetting,
   isCreation: boolean,
-  validation: (inputKeys: string[], mandatoryKey: string) => boolean
+  validation: (inputKeys: string[], mandatoryKey: string) => boolean,
 ) => {
   const attributesConfiguration = getAttributesConfiguration(entitySetting);
   if (!attributesConfiguration) {
     return;
   }
-  const mandatoryAttributes = attributesConfiguration.filter((attr) => attr.mandatory);
+
+  const mandatoryConfigurationAttributes = attributesConfiguration.filter((attr) => attr.mandatory).map((attr) => attr.name);
+  const mandatorySchemaAttributes = Array.from(schemaAttributesDefinition.getAttributes(entitySetting.entity_type).values()).filter((attr) => attr.mandatoryType === 'external').map((attr) => attr.name);
+  const mandatorySchemaRefs = schemaRelationsRefDefinition.getRelationsRef(entitySetting.entity_type).filter((ref) => ref.mandatoryType === 'external').map((ref) => ref.inputName);
+
+  const mandatoryAttributes = [
+    ...mandatoryConfigurationAttributes,
+    ...mandatorySchemaAttributes,
+    ...mandatorySchemaRefs,
+  ];
   // In creation if enforce reference is activated, user must provide a least 1 external references
   if (isCreation && entitySetting.enforce_reference) {
-    mandatoryAttributes.push({ name: externalReferences.inputName, mandatory: true });
+    mandatoryAttributes.push(externalReferences.inputName);
   }
   const inputKeys = Object.keys(input);
   mandatoryAttributes.forEach((attr) => {
-    if (!(validation(inputKeys, attr.name))) {
-      throw ValidationError(attr.name, { message: 'This attribute is mandatory', attribute: attr.name });
+    if (!(validation(inputKeys, attr))) {
+      throw ValidationError(attr, { message: 'This attribute is mandatory', attribute: attr });
     }
   });
 };
@@ -82,7 +92,7 @@ const validateMandatoryAttributesOnCreation = async (
   context: AuthContext,
   user: AuthUser,
   input: Record<string, unknown>,
-  entitySetting: BasicStoreEntityEntitySetting
+  entitySetting: BasicStoreEntityEntitySetting,
 ) => {
   const validateMandatoryAttributesOnCreationFn = async () => {
     // Should have all the mandatory keys and the associated values not null
@@ -100,7 +110,7 @@ const validateMandatoryAttributesOnUpdate = async (
   context: AuthContext,
   user: AuthUser,
   input: Record<string, unknown>,
-  entitySetting: BasicStoreEntityEntitySetting
+  entitySetting: BasicStoreEntityEntitySetting,
 ) => {
   const validateMandatoryAttributesOnUpdateFn = async () => {
     // If the mandatory key is present the associated value should be not null
@@ -156,7 +166,7 @@ export const validateInputUpdate = async (
   instanceType: string,
   input: Array<EditInput>,
   entitySetting: BasicStoreEntityEntitySetting,
-  initial: Record<string, unknown>
+  initial: Record<string, unknown>,
 ) => {
   const validateInputUpdateFn = async () => {
     // Convert input to record
