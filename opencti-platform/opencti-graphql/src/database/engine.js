@@ -32,7 +32,7 @@ import {
   ConfigurationError,
   DatabaseError,
   EngineShardsError,
-  FunctionalError,
+  FunctionalError, INITIALIZATION_FAIL,
   UnsupportedError
 } from '../config/errors';
 import {
@@ -182,7 +182,7 @@ export const searchEngineVersion = async () => {
     .then((info) => oebp(info).version)
     .catch(
       /* istanbul ignore next */ (e) => {
-        throw ConfigurationError('[SEARCH] Search engine seems down', { error: e.message });
+        throw ConfigurationError(INITIALIZATION_FAIL, { error: e.message, reason: '[SEARCH] Search engine seems down' });
       }
     );
   const searchPlatform = searchInfo.distribution || ELK_ENGINE; // openSearch or elasticSearch

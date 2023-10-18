@@ -14,7 +14,7 @@ import {
   FunctionalError,
   LockTimeoutError,
   MissingReferenceError,
-  TYPE_LOCK_ERROR,
+  TYPE_LOCK_ERROR, UnknownError,
   UnsupportedError,
   ValidationError,
 } from '../config/errors';
@@ -1432,9 +1432,9 @@ export const mergeEntities = async (context, user, targetEntityId, sourceEntityI
     });
   } catch (err) {
     if (err.name === TYPE_LOCK_ERROR) {
-      throw LockTimeoutError({ participantIds });
+      throw LockTimeoutError('MERGE_ENTITIES', { error: err, participantIds });
     }
-    throw err;
+    throw UnknownError('MERGE_ENTITIES', { error: err });
   } finally {
     if (lock) await lock.unlock();
   }
@@ -2076,9 +2076,9 @@ export const updateAttributeMetaResolved = async (context, user, initial, inputs
     return { element: updatedInstance, event: null, isCreation: false };
   } catch (err) {
     if (err.name === TYPE_LOCK_ERROR) {
-      throw LockTimeoutError({ participantIds });
+      throw LockTimeoutError('UPDATE_ATTRIBUTE', { error: err, participantIds });
     }
-    throw err;
+    throw UnknownError('UPDATE_ATTRIBUTE', { error: err });
   } finally {
     if (lock) await lock.unlock();
   }
@@ -2915,9 +2915,9 @@ export const createRelationRaw = async (context, user, input, opts = {}) => {
     return { element: dataRel.element, event, isCreation: true };
   } catch (err) {
     if (err.name === TYPE_LOCK_ERROR) {
-      throw LockTimeoutError({ participantIds });
+      throw LockTimeoutError('RELATION_CREATION', { error: err, participantIds });
     }
-    throw err;
+    throw UnknownError('RELATION_CREATION', { error: err });
   } finally {
     if (lock) await lock.unlock();
   }
@@ -3228,9 +3228,9 @@ const createEntityRaw = async (context, user, input, type, opts = {}) => {
     return { element: dataEntity.element, event, isCreation: true };
   } catch (err) {
     if (err.name === TYPE_LOCK_ERROR) {
-      throw LockTimeoutError({ participantIds });
+      throw LockTimeoutError('ENTITY_CREATION', { error: err, participantIds });
     }
-    throw err;
+    throw UnknownError('ENTITY_CREATION', { error: err });
   } finally {
     if (lock) await lock.unlock();
   }
@@ -3339,9 +3339,9 @@ export const internalDeleteElementById = async (context, user, id, opts = {}) =>
     await redisAddDeletions(participantIds);
   } catch (err) {
     if (err.name === TYPE_LOCK_ERROR) {
-      throw LockTimeoutError({ participantIds });
+      throw LockTimeoutError('DELETE_ELEMENT', { error: err, participantIds });
     }
-    throw err;
+    throw UnknownError('DELETE_ELEMENT', { error: err });
   } finally {
     if (lock) await lock.unlock();
   }

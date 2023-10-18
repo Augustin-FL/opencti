@@ -63,7 +63,7 @@ const initImportCsvConnector = () => {
             error: error.message,
             source: fileId,
           };
-          await reportExpectation(context, applicantUser, workId, errorData);
+          await reportExpectation(context, applicantUser, workId, errorData); // TODO JRI CHECK THAT
         })
           .on('end', async () => {
             if (!hasError) {
