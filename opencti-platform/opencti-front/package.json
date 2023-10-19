@@ -124,7 +124,7 @@
     "jsdom": "22.1.0",
     "prettier": "3.0.3",
     "react-test-renderer": "18.2.0",
-    "relay-compiler": "15.0.0",
+    "relay-compiler": "16.0.0",
     "relay-test-utils": "15.0.0",
     "tap": "18.5.0",
     "typescript": "5.2.2",
