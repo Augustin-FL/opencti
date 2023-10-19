@@ -15089,7 +15089,7 @@ __metadata:
     recharts: 2.9.0
     relay-compiler: 15.0.0
     relay-runtime: 15.0.0
-    relay-test-utils: 15.0.0
+    relay-test-utils: 16.0.0
     remark-flexible-markers: 1.0.3
     remark-gfm: 4.0.0
     remark-parse: 11.0.0
@@ -17247,15 +17247,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"relay-test-utils@npm:15.0.0":
-  version: 15.0.0
-  resolution: "relay-test-utils@npm:15.0.0"
+"relay-runtime@npm:16.0.0":
+  version: 16.0.0
+  resolution: "relay-runtime@npm:16.0.0"
   dependencies:
     "@babel/runtime": ^7.0.0
     fbjs: ^3.0.2
     invariant: ^2.2.4
-    relay-runtime: 15.0.0
-  checksum: cc54a27d960d15ef27f693083f00ce6ca75d7e47f3e7effd2f4f03d28713d0b6f8ae3bc37e04c81ac6c95c6a962578fa3cc01cb22feba9402f3a19ed999f46ad
+  checksum: 2769cb364db0d1106d777e676138c12ec0bfaee373f47d5569d72eb1bf49107dd07d02d5f3a196ce58a5becf01a4a5a8324a40059e9e923d18eb86b634e14207
+  languageName: node
+  linkType: hard
+
+"relay-test-utils@npm:16.0.0":
+  version: 16.0.0
+  resolution: "relay-test-utils@npm:16.0.0"
+  dependencies:
+    "@babel/runtime": ^7.0.0
+    fbjs: ^3.0.2
+    invariant: ^2.2.4
+    relay-runtime: 16.0.0
+  checksum: 72033a169a7311092d5ef86afa7cd3ed21e2c94ed4891be66511c256046c6e642713624e87902033fc075282b6a2e9918fddeb83dcfa5e60124132b6ca51dccb
   languageName: node
   linkType: hard
 
