@@ -211,6 +211,7 @@ const iconSelector = (type, variant, fontSize, color, isReversed) => {
         <AccountGroupOutline style={style} fontSize={fontSize} role="img" />
       );
     case 'all-users':
+    case 'dynamic options':
       return (
         <AccountGroupOutline style={style} fontSize={fontSize} role="img" />
       );

@@ -2,7 +2,9 @@ import type { Resolvers } from '../../../generated/graphql';
 import { buildRefRelationKey } from '../../../schema/general';
 import { RELATION_CREATED_BY, RELATION_OBJECT_ASSIGNEE, RELATION_OBJECT_LABEL, RELATION_OBJECT_MARKING } from '../../../schema/stixRefRelationship';
 import { stixDomainObjectDelete } from '../../../domain/stixDomainObject';
-import { addFeedback, feedbackContainsStixObjectOrStixRelationship, findAll, findById } from './feedback-domain';
+import { addFeedback, feedbackContainsStixObjectOrStixRelationship, feedbackEditAuthorizedMembers, findAll, findById } from './feedback-domain';
+import { getAuthorizedMembers } from '../../../utils/authorizedMembers';
+import { getUserAccessRight } from '../../../utils/access';
 
 const feedbackResolvers: Resolvers = {
   Query: {
@@ -11,6 +13,10 @@ const feedbackResolvers: Resolvers = {
     feedbackContainsStixObjectOrStixRelationship: (_, args, context) => {
       return feedbackContainsStixObjectOrStixRelationship(context, context.user, args.id, args.stixObjectOrStixRelationshipId);
     },
+  },
+  Feedback: {
+    authorizedMembers: (feedback, _, context) => getAuthorizedMembers(context, context.user, feedback),
+    currentUserAccessRight: (feedback, _, context) => getUserAccessRight(context.user, feedback),
   },
   FeedbacksFilter: {
     createdBy: buildRefRelationKey(RELATION_CREATED_BY),
@@ -28,6 +34,9 @@ const feedbackResolvers: Resolvers = {
     },
     feedbackDelete: (_, { id }, context) => {
       return stixDomainObjectDelete(context, context.user, id);
+    },
+    feedbackEditAuthorizedMembers: (_, { id, input }, context) => {
+      return feedbackEditAuthorizedMembers(context, context.user, id, input);
     },
   }
 };

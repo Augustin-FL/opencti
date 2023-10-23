@@ -28,6 +28,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
 import { makeStyles } from '@mui/styles';
+import FormAuthorizedMembersDialog from '@components/common/form/FormAuthorizedMembersDialog';
 import ExportButtons from '../../../../components/ExportButtons';
 import Security from '../../../../utils/Security';
 import { useFormatter } from '../../../../components/i18n';
@@ -43,6 +44,7 @@ import { containerAddStixCoreObjectsLinesRelationAddMutation } from './Container
 import StixCoreObjectSharing from '../stix_core_objects/StixCoreObjectSharing';
 import useGranted, {
   KNOWLEDGE_KNUPDATE,
+  KNOWLEDGE_KNUPDATE_KNMANAGEAUTHMEMBERS,
 } from '../../../../utils/hooks/useGranted';
 import StixCoreObjectEnrichment from '../stix_core_objects/StixCoreObjectEnrichment';
 import StixCoreObjectQuickSubscription from '../stix_core_objects/StixCoreObjectQuickSubscription';
@@ -88,6 +90,9 @@ export const containerHeaderObjectsQuery = graphql`
           name
           entity_type
         }
+      }
+      creators {
+        id
       }
       objectMarking {
         edges {
@@ -476,6 +481,9 @@ const ContainerHeader = (props) => {
     enableQuickSubscription,
     enableQuickExport,
     investigationAddFromContainer,
+    enableManageAuthorizedMembers,
+    authorizedMembers,
+    authorizedMembersMutation,
   } = props;
   const classes = useStyles();
   const { t, fd } = useFormatter();
@@ -719,6 +727,7 @@ const ContainerHeader = (props) => {
       }
     }
   };
+
   return (
     <>
       <Tooltip
@@ -855,68 +864,85 @@ const ContainerHeader = (props) => {
                 })),
               );
               const appliedSuggestions = getAppliedSuggestions();
-              if (userIsKnowledgeEditor) {
-                return (
-                  <React.Fragment>
-                    <ToggleButtonGroup
-                      size="small"
-                      color="secondary"
-                      exclusive={false}
+              return (
+                <>
+                  <ToggleButtonGroup
+                    size="small"
+                    color="secondary"
+                    exclusive={false}
+                  >
+                    <Security
+                      needs={[KNOWLEDGE_KNUPDATE_KNMANAGEAUTHMEMBERS]}
+                      hasAccess={enableManageAuthorizedMembers}
                     >
-                      {disableSharing !== true && (
-                        <StixCoreObjectSharing
-                          elementId={container.id}
-                          variant="header"
-                        />
-                      )}
-                      {enableQuickExport && (
-                        <StixCoreObjectFileExport id={container.id} type={container.entity_type}/>
-                      )}
-                      {enableSuggestions && (
-                        <React.Fragment>
-                          <Tooltip title={t('Open the suggestions')}>
-                            <ToggleButton
-                              onClick={() => setDisplaySuggestions(true)}
-                              disabled={suggestions.length === 0}
-                              value="suggestion"
-                              size="small"
-                              style={{ marginRight: 3 }}
-                            >
-                              <Badge
-                                badgeContent={
-                                  suggestions.filter(
-                                    (n) => !appliedSuggestions.includes(n.type),
-                                  ).length
-                                }
-                                color="secondary"
-                              >
-                                <AssistantOutlined
-                                  fontSize="small"
-                                  disabled={suggestions.length === 0}
-                                  color={
-                                    // eslint-disable-next-line no-nested-ternary
-                                    suggestions.length === 0
-                                      ? 'disabled'
-                                      : displaySuggestions
-                                        ? 'secondary'
-                                        : 'primary'
-                                  }
-                                />
-                              </Badge>
-                            </ToggleButton>
-                          </Tooltip>
-                        </React.Fragment>
-                      )}
-                      {enableQuickSubscription && (
-                        <StixCoreObjectQuickSubscription
-                          instanceId={container.id}
-                          instanceName={defaultValue(container)}
-                        />
-                      )}
-                      <StixCoreObjectEnrichment
-                        stixCoreObjectId={container.id}
+                      <FormAuthorizedMembersDialog
+                        id={container.id}
+                        ownerId={containerProps.container.creators?.[0].id}
+                        authorizedMembers={authorizedMembers}
+                        mutation={authorizedMembersMutation}
                       />
-                    </ToggleButtonGroup>
+                    </Security>
+
+                    {userIsKnowledgeEditor && (
+                      <>
+                        {disableSharing !== true && (
+                          <StixCoreObjectSharing
+                            elementId={container.id}
+                            variant="header"
+                          />
+                        )}
+                        {enableQuickExport && (
+                          <StixCoreObjectFileExport id={container.id} type={container.entity_type}/>
+                        )}
+                        {enableSuggestions && (
+                          <React.Fragment>
+                            <Tooltip title={t('Open the suggestions')}>
+                              <ToggleButton
+                                onClick={() => setDisplaySuggestions(true)}
+                                disabled={suggestions.length === 0}
+                                value="suggestion"
+                                size="small"
+                                style={{ marginRight: 3 }}
+                              >
+                                <Badge
+                                  badgeContent={
+                                    suggestions.filter(
+                                      (n) => !appliedSuggestions.includes(n.type),
+                                    ).length
+                                  }
+                                  color="secondary"
+                                >
+                                  <AssistantOutlined
+                                    fontSize="small"
+                                    disabled={suggestions.length === 0}
+                                    color={
+                                      // eslint-disable-next-line no-nested-ternary
+                                      suggestions.length === 0
+                                        ? 'disabled'
+                                        : displaySuggestions
+                                          ? 'secondary'
+                                          : 'primary'
+                                    }
+                                  />
+                                </Badge>
+                              </ToggleButton>
+                            </Tooltip>
+                          </React.Fragment>
+                        )}
+                        {enableQuickSubscription && (
+                          <StixCoreObjectQuickSubscription
+                            instanceId={container.id}
+                            instanceName={defaultValue(container)}
+                          />
+                        )}
+                        <StixCoreObjectEnrichment
+                          stixCoreObjectId={container.id}
+                        />
+                      </>
+                    )}
+                  </ToggleButtonGroup>
+
+                  {userIsKnowledgeEditor && (
                     <Dialog
                       PaperProps={{ elevation: 1 }}
                       open={displaySuggestions}
@@ -1009,9 +1035,9 @@ const ContainerHeader = (props) => {
                         </Button>
                       </DialogActions>
                     </Dialog>
-                  </React.Fragment>
-                );
-              }
+                  )}
+                </>
+              );
             }
             return <div/>;
           }}

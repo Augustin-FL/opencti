@@ -13,6 +13,7 @@ import FeedbackEdition from './FeedbackEdition';
 import StixCoreObjectExternalReferences from '../../analyses/external_references/StixCoreObjectExternalReferences';
 import StixCoreObjectLatestHistory from '../../common/stix_core_objects/StixCoreObjectLatestHistory';
 import { Feedback_case$key } from './__generated__/Feedback_case.graphql';
+import { authorizedMembersToOptions } from '../../../../utils/authorizedMembers';
 
 const useStyles = makeStyles(() => ({
   gridContainer: {
@@ -37,6 +38,13 @@ const feedbackFragment = graphql`
     revoked
     description
     confidence
+    currentUserAccessRight
+    authorizedMembers {
+      id
+      name
+      entity_type
+      access_right
+    }
     createdBy {
       ... on Identity {
         id
@@ -94,6 +102,23 @@ const feedbackFragment = graphql`
   }
 `;
 
+// Mutation to edit authorized members of a feedback
+const feedbackAuthorizedMembersMutation = graphql`
+  mutation FeedbackAuthorizedMembersMutation(
+    $id: ID!
+    $input: [MemberAccessInput!]
+  ) {
+    feedbackEditAuthorizedMembers(id: $id, input: $input) {
+      authorizedMembers {
+        id
+        name
+        entity_type
+        access_right
+      }
+    }
+  }
+`;
+
 interface FeedbackProps {
   data: Feedback_case$key;
 }
@@ -102,14 +127,20 @@ const FeedbackComponent: FunctionComponent<FeedbackProps> = ({ data }) => {
   const classes = useStyles();
   const feedbackData = useFragment(feedbackFragment, data);
 
+  const canManage = feedbackData.currentUserAccessRight === 'admin';
+  const canEdit = canManage || feedbackData.currentUserAccessRight === 'edit';
+
   return (
     <div className={classes.container}>
       <ContainerHeader
         container={feedbackData}
         PopoverComponent={<FeedbackPopover id={feedbackData.id} />}
         enableSuggestions={false}
-        disableSharing={true}
-        enableQuickSubscription={true}
+        disableSharing
+        enableQuickSubscription
+        enableManageAuthorizedMembers={canManage}
+        authorizedMembersMutation={feedbackAuthorizedMembersMutation}
+        authorizedMembers={authorizedMembersToOptions(feedbackData.authorizedMembers)}
       />
       <Grid
         container={true}
@@ -141,7 +172,7 @@ const FeedbackComponent: FunctionComponent<FeedbackProps> = ({ data }) => {
           <StixCoreObjectLatestHistory stixCoreObjectId={feedbackData.id} />
         </Grid>
       </Grid>
-      <Security needs={[KNOWLEDGE_KNUPDATE]}>
+      <Security needs={[KNOWLEDGE_KNUPDATE]} hasAccess={canEdit}>
         <FeedbackEdition feedbackId={feedbackData.id} />
       </Security>
     </div>

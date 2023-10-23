@@ -1394,6 +1394,7 @@ const i18n = {
       'Confidence level': 'Nivel de confianza',
       Confidence: 'Confianza',
       confidence: 'Confianza',
+      Authorized_members: 'Autorización',
       'The min value cannot be greater than max value':
         'El valor mínimo no puede ser mayor que el valor máximo',
       'Each tick value must be between min and max value':
@@ -2278,6 +2279,9 @@ const i18n = {
         'Todavía no se han configurado ninguna configuración',
       'Do you want to delete this CSV mapper ?':
         '¿Desea eliminar este mapeador CSV?',
+      'No default value for authorized members': 'Sin valor predeterminado para miembros autorizados',
+      'Default values are applied only during entity creation. So only for entities created after default values have been set': 'Los valores predeterminados se aplican sólo durante la creación de la entidad. Entonces, solo para entidades creadas después de que se hayan establecido los valores predeterminados',
+      'Activate/Deactivate authorized members': 'Activar/Desactivar miembros autorizados',
       'Attribute mapping configuration': 'Configuración de mapeo de atributos',
     },
     'fr-fr': {
@@ -3685,6 +3689,7 @@ const i18n = {
       'Confidence level': 'Niveau de confiance',
       Confidence: 'Confiance',
       confidence: 'Confiance',
+      Authorized_members: 'Autorisation',
       'The min value cannot be greater than max value':
         'La valeur min ne peut pas être supérieure à la valeur max',
       'Each tick value must be between min and max value':
@@ -4562,6 +4567,10 @@ const i18n = {
       'Do you want to delete this CSV mapper ?':
         'Voulez-vous supprimer ce mappage CSV ?',
       'Attribute mapping configuration': "Configuration de mappage d'attributs",
+      'No default value for authorized members': 'Aucune valeur par défaut pour les membres autorisés',
+      'Default values are applied only during entity creation. So only for entities created after default values have been set': 'Les valeurs par défaut sont appliquées uniquement lors de la création d\'une entité. Donc uniquement pour les entités créées après que les valeurs par défaut aient été définies',
+      'Activate/Deactivate authorized members': 'Activer/Désactiver les membres autorisés',
+      'Attribute mapping configuration': 'Configuration de mappage d\'attributs',
     },
     'ja-jp': {
       // Titles
@@ -5912,6 +5921,7 @@ const i18n = {
       'Confidence level': '信頼水準',
       Confidence: '信頼度',
       confidence: '信頼度',
+      Authorized_members: '認可',
       'The min value cannot be greater than max value':
         '最小値を最大値より大きくすることはできません',
       'Each tick value must be between min and max value':
@@ -6759,6 +6769,9 @@ const i18n = {
       'There are not any configurations set yet': 'まだ設定がありません',
       'Do you want to delete this CSV mapper ?':
         'このCSVマッパーを削除しますか？',
+      'No default value for authorized members': '承認されたメンバーのデフォルト値はありません',
+      'Default values are applied only during entity creation. So only for entities created after default values have been set': 'デフォルト値はエンティティの作成時にのみ適用されます。したがって、デフォルト値が設定された後に作成されたエンティティのみが対象です',
+      'Activate/Deactivate authorized members': '許可されたメンバーのアクティブ化/非アクティブ化',
       'Attribute mapping configuration': '属性マッピングの設定',
     },
     'zh-cn': {
@@ -8023,6 +8036,7 @@ const i18n = {
       'Confidence level': '置信级别',
       Confidence: '置信度',
       confidence: '置信度',
+      Authorized_members: '授权',
       'The min value cannot be greater than max value': '最小值不能大于最大值',
       'Each tick value must be between min and max value':
         '每个刻度值必须介于最小值和最大值之间',
@@ -8848,6 +8862,9 @@ const i18n = {
       'Create a CSV Mapper configuration': '创建CSV映射配置',
       'There are not any configurations set yet': '目前尚未设置任何配置',
       'Do you want to delete this CSV mapper ?': '您要删除此CSV映射吗？',
+      'No default value for authorized members': '授权成员无默认值',
+      'Default values are applied only during entity creation. So only for entities created after default values have been set': '默认值仅在实体创建期间应用。因此仅适用于设置默认值后创建的实体',
+      'Activate/Deactivate authorized members': '激活/停用授权会员',
       'Attribute mapping configuration': '属性映射配置',
     },
     'en-us': {
@@ -9289,6 +9306,7 @@ const i18n = {
       create: 'Creation events',
       update: 'Modification events',
       delete: 'Deletion events',
+      Authorized_members: 'Authorization',
     },
   },
 };
