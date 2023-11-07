@@ -52,6 +52,7 @@ class AddLocationsThreatActorIndividual extends Component {
     const paginationOptions = {
       search: this.state.search,
     };
+    console.log('Open avec le drawer')
     return (
       <>
         <IconButton
@@ -102,7 +103,7 @@ class AddLocationsThreatActorIndividual extends Component {
           contextual={true}
           inputValue={this.state.search}
           paginationOptions={paginationOptions}
-        />
+         onlyAuthors/>
       </>
     );
   }
