@@ -240,6 +240,15 @@ const StixDomainObjectHeader = (props) => {
 
   const onSubmitCreateAlias = (values, { resetForm, setSubmitting }) => {
     const currentAliases = getCurrentAliases();
+    const normalizeNameEntity = (stixDomainObject.name).toLowerCase().trim();
+    const normalizeNewAlias = newAlias.toLowerCase().trim();
+    if (normalizeNameEntity === normalizeNewAlias) {
+      setOpenAlias(false);
+      setOpenCommitCreate(false);
+      setNewAlias('');
+      resetForm();
+      return;
+    }
     if (
       (currentAliases === null || !currentAliases.includes(newAlias))
       && newAlias !== ''
