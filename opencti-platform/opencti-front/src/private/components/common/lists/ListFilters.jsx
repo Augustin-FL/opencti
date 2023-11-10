@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-import { FilterListOutlined } from '@mui/icons-material';
+import { FilterListOffOutlined, FilterListOutlined } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import Popover from '@mui/material/Popover';
 import Tooltip from '@mui/material/Tooltip';
@@ -10,24 +10,15 @@ import { useFormatter } from '../../../../components/i18n';
 import { directFilters, inlineFilters } from '../../../../utils/filters/filtersUtils';
 import FilterAutocomplete from './FilterAutocomplete';
 import InlineFilters from './InlineFilters';
+import { FiltersHelpersUtil } from '../../../../components/filters/FiltersHelpers.util';
 
 const useStyles = makeStyles(() => ({
-  filters: {
-    float: 'left',
-    margin: '-3px 0 0 -5px',
-  },
   container: {
     width: 600,
     padding: 20,
   },
   autocomplete: {
-    float: 'left',
-    margin: '5px 10px 0 10px',
-    width: 200,
-  },
-  booleanFilter: {
-    float: 'left',
-    margin: '5px 10px 0 10px',
+    flex: '0 0 200px',
   },
 }));
 
@@ -56,20 +47,23 @@ const ListFilters = ({
 }) => {
   const { t } = useFormatter();
   const classes = useStyles();
-  let icon = <FilterListOutlined fontSize={fontSize || 'medium'} />;
+  let icon = <FilterListOutlined fontSize={fontSize || 'medium'}/>;
   let tooltip = t('Filters');
   let color = 'primary';
   if (type === 'from') {
-    icon = <RayStartArrow fontSize={fontSize || 'medium'} />;
+    icon = <RayStartArrow fontSize={fontSize || 'medium'}/>;
     tooltip = t('Dynamic source filters');
     color = 'warning';
   } else if (type === 'to') {
-    icon = <RayEndArrow fontSize={fontSize || 'medium'} />;
+    icon = <RayEndArrow fontSize={fontSize || 'medium'}/>;
     tooltip = t('Dynamic target filters');
     color = 'success';
   }
+  const handleClearFilters = () => {
+    FiltersHelpersUtil.getFilterHelpers()?.handleClearAllFilters();
+  };
   return (
-    <div className={classes.filters}>
+    <>
       {variant === 'text' ? (
         <Tooltip title={tooltip}>
           <Button
@@ -78,22 +72,32 @@ const ListFilters = ({
             onClick={handleOpenFilters}
             startIcon={icon}
             size="small"
-            style={{ float: 'left', margin: '0 15px 0 7px' }}
           >
             {t('Filters')}
           </Button>
         </Tooltip>
       ) : (
-        <Tooltip title={tooltip}>
-          <IconButton
-            color={color}
-            onClick={handleOpenFilters}
-            style={{ float: 'left', marginTop: -2 }}
-            size={size || 'large'}
-          >
-            {icon}
-          </IconButton>
-        </Tooltip>
+        <>
+          <Tooltip title={tooltip}>
+            <IconButton
+              color={color}
+              onClick={handleOpenFilters}
+              size={size || 'large'}
+            >
+              {icon}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={t('Clear filters')}>
+            <IconButton
+              color={color}
+              onClick={handleClearFilters}
+              size={size || 'large'}
+            >
+              {<FilterListOffOutlined/>}
+            </IconButton>
+          </Tooltip>
+        </>
+
       )}
       <Popover
         classes={{ paper: classes.container }}
@@ -118,7 +122,7 @@ const ListFilters = ({
           (filterKey) => {
             if (inlineFilters.includes(filterKey)) {
               return (
-                <div className={classes.booleanFilter} key={filterKey}>
+                <div key={filterKey}>
                   <InlineFilters
                     filterKey={filterKey}
                     defaultHandleRemoveFilter={defaultHandleRemoveFilter}
@@ -145,8 +149,7 @@ const ListFilters = ({
             );
           },
         )}
-      <div className="clearfix" />
-    </div>
+    </>
   );
 };
 

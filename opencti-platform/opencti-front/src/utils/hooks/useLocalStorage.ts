@@ -11,6 +11,7 @@ import {
 } from '../filters/filtersUtils';
 import { isEmptyField, isNotEmptyField, removeEmptyFields } from '../utils';
 import { MESSAGING$ } from '../../relay/environment';
+import { FiltersHelpersUtil } from '../../components/filters/FiltersHelpers.util';
 
 export interface MessageFromLocalStorage {
   id: string;
@@ -54,6 +55,7 @@ export interface UseLocalStorageHelpers {
   handleRemoveFilter: (key: string, id?: string, op?: string) => void;
   handleSort: (field: string, order: boolean) => void;
   handleAddFilter: HandleAddFilter;
+  handleRemoveRepresentationFilter: HandleAddFilter;
   handleSwitchFilter: HandleAddFilter;
   handleSwitchGlobalMode: () => void;
   handleSwitchLocalMode: (filter: Filter) => void;
@@ -67,6 +69,8 @@ export interface UseLocalStorageHelpers {
   handleClearTypes: () => void;
   handleAddProperty: (field: string, value: unknown) => void;
   handleChangeView: (value: string) => void;
+  handleClearAllFilters: () => void;
+  handleChangeOperatorFilters: HandleOperatorFilter;
 }
 
 const localStorageToPaginationOptions = (
@@ -124,6 +128,13 @@ export type HandleAddFilter = (
   k: string,
   id: string,
   op?: string,
+  event?: SyntheticEvent
+) => void;
+
+export type HandleOperatorFilter = (
+  k: string,
+  oldOp: string,
+  op: string,
   event?: SyntheticEvent
 ) => void;
 
@@ -291,6 +302,7 @@ export const usePaginationLocalStorage = <U>(
   additionalFilters?: Filter[],
   ignoreUri?: boolean,
 ): PaginationLocalStorage<U> => {
+  console.log(key, initialValue, additionalFilters, ignoreUri);
   const [viewStorage, setValue] = useLocalStorage(key, initialValue, ignoreUri);
   const paginationOptions = localStorageToPaginationOptions(
     { count: 25, ...viewStorage },
@@ -381,8 +393,7 @@ export const usePaginationLocalStorage = <U>(
         const newBaseFilters = {
           ...viewStorage.filters,
           filters: [
-            ...viewStorage.filters.filters.filter((f) => f.key !== k || f.operator !== op), // remove filter with k as key
-            newFilterElement, // add new filter
+            ...viewStorage.filters.filters.map((f) => (f.key === k && f.operator === op ? newFilterElement : f)),
           ],
         };
         setValue((c) => ({
@@ -403,6 +414,34 @@ export const usePaginationLocalStorage = <U>(
           mode: 'and',
           filterGroups: [],
           filters: [newFilterElement],
+        };
+        setValue((c) => ({
+          ...c,
+          filters: newBaseFilters,
+        }));
+      }
+    },
+    handleRemoveRepresentationFilter: (
+      k: string,
+      id: string,
+      defaultOp = 'eq',
+      event?: SyntheticEvent,
+    ) => {
+      if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+      if (viewStorage.filters) {
+        const newBaseFilters: FilterGroup = {
+          ...viewStorage.filters,
+          filters: [...viewStorage?.filters.filters].map((filter) => {
+            return filter.key === k && filter.operator === defaultOp
+              ? {
+                ...filter,
+                values: filter.values.filter((value) => value !== id),
+              }
+              : filter;
+          }),
         };
         setValue((c) => ({
           ...c,
@@ -520,12 +559,66 @@ export const usePaginationLocalStorage = <U>(
     handleClearTypes: () => {
       setValue((c) => ({ ...c, types: [] }));
     },
+    handleClearAllFilters: () => {
+      setValue((c) => ({
+        ...c,
+        filters: undefined,
+      }));
+    },
+    handleChangeOperatorFilters: (k: string, oldOp: string, op: string, event: SyntheticEvent) => {
+      if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+      const filter = viewStorage.filters
+        ? findFilterFromKey(viewStorage.filters.filters, k, oldOp)
+        : undefined;
+
+      // TODO merge filters which key and op are the same
+      // TODO change op
+      let newOpFilter = {
+        ...filter,
+        operator: op,
+      } as Filter;
+      if (op === 'nil' || op === 'not_nil') {
+        newOpFilter = {
+          ...newOpFilter,
+          values: [],
+        } as Filter;
+      }
+
+      if (viewStorage.filters) {
+        const newBaseFilters = {
+          ...viewStorage.filters,
+          filters: [
+            ...viewStorage?.filters.filters.map((f) => (f.key === k && f.operator === oldOp ? newOpFilter : f)),
+          ],
+        };
+        setValue((c) => {
+          return ({
+            ...c,
+            filters: newBaseFilters,
+          });
+        });
+      }
+    },
+  };
+  FiltersHelpersUtil.setFilterHelpers(helpers);
+  const removeEmptyFilter = paginationOptions.filters ? [...paginationOptions?.filters?.filters.filter((f) => (f.values.length > 0))] : undefined;
+  const filters = removeEmptyFilter && removeEmptyFilter.length > 0 ? {
+    ...paginationOptions.filters,
+    filters: removeEmptyFilter,
+  } : undefined;
+
+  const cleanPaginationOptions = {
+    ...paginationOptions,
+    filters,
   };
 
   return {
     viewStorage,
     helpers,
-    paginationOptions: paginationOptions as U,
+    paginationOptions: cleanPaginationOptions as U,
     localStorageKey: key,
   };
 };

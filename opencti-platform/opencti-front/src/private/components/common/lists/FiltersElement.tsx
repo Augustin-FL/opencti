@@ -21,11 +21,22 @@ interface FiltersElementProps {
   variant?: string;
   keyword: string;
   availableFilterKeys: string[];
-  searchContext: { entityTypes: string[], elementId?: string[] };
+  searchContext: {
+    entityTypes: string[],
+    elementId?: string[]
+  };
   handleChangeKeyword: (event: React.ChangeEvent) => void;
   noDirectFilters?: boolean;
-  setInputValues: (value: { key: string, values: (string | Date)[], operator?: string }[]) => void;
-  inputValues: { key: string, values: (string | Date)[], operator?: string }[];
+  setInputValues: (value: {
+    key: string,
+    values: (string | Date)[],
+    operator?: string
+  }[]) => void;
+  inputValues: {
+    key: string,
+    values: (string | Date)[],
+    operator?: string
+  }[];
   defaultHandleAddFilter: HandleAddFilter;
   availableEntityTypes?: string[];
   availableRelationshipTypes?: string[];
@@ -67,6 +78,7 @@ const FiltersElement: FunctionComponent<FiltersElementProps> = ({
     .flat();
   return (
     <div>
+      FiltersElements
       <Grid container={true} spacing={2}>
         {variant === FiltersVariant.dialog && (
           <Grid item={true} xs={12}>

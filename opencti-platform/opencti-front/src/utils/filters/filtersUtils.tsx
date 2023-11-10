@@ -1,7 +1,10 @@
 import * as R from 'ramda';
 import { useFormatter } from '../../components/i18n';
 
-import type { FilterGroup as GqlFilterGroup, Filter as GqlFilter } from './__generated__/useSearchEntitiesStixCoreObjectsContainersSearchQuery.graphql';
+import type {
+  FilterGroup as GqlFilterGroup,
+  Filter as GqlFilter,
+} from './__generated__/useSearchEntitiesStixCoreObjectsContainersSearchQuery.graphql';
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -56,6 +59,11 @@ export const inlineFilters = [
   'is_read',
   'trigger_type',
   'instance_trigger',
+];
+
+export const integerFilters = [
+  'x_opencti_base_score',
+  'x_opencti_score',
 ];
 
 // filters that can have 'eq' or 'not_eq' operator
@@ -213,7 +221,7 @@ export const findFilterIndexFromKey = (filters: Filter[], key: string, operator?
 };
 
 export const filtersWithEntityType = (filters: FilterGroup | undefined, type: string | string[]) => {
-  const entityTypeFilter : Filter = {
+  const entityTypeFilter: Filter = {
     key: 'entity_type',
     values: Array.isArray(type) ? type : [type],
     operator: 'eq',

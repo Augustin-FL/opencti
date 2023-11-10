@@ -12,6 +12,10 @@ import FiltersElement from './FiltersElement';
 import ListFilters from './ListFilters';
 import DialogFilters from './DialogFilters';
 import { HandleAddFilter } from '../../../../utils/hooks/useLocalStorage';
+import { SearchEntitiesUtil } from '../../../../components/filters/SearchEntities.util';
+import {
+  FiltersHelpersUtil,
+} from '../../../../components/filters/FiltersHelpers.util';
 
 interface FiltersProps {
   variant?: string;
@@ -32,6 +36,7 @@ interface FiltersProps {
   searchContext?: { entityTypes: string[], elementId?: string[] };
   type?: string;
 }
+
 const Filters: FunctionComponent<FiltersProps> = ({
   variant,
   disabled,
@@ -57,7 +62,33 @@ const Filters: FunctionComponent<FiltersProps> = ({
   const [filters, setFilters] = useState<FilterGroup | undefined>(initialFilterGroup);
   const [inputValues, setInputValues] = useState([]);
   const [keyword, setKeyword] = useState('');
-
+  const [searchScope, setSearchScope] = useState<Record<string, string[]>>(
+    availableRelationFilterTypes || {
+      targets: [
+        'Region',
+        'Country',
+        'Administrative-Area',
+        'City',
+        'Position',
+        'Sector',
+        'Organization',
+        'Individual',
+        'System',
+        'Event',
+        'Vulnerability',
+      ],
+    },
+  );
+  SearchEntitiesUtil.setSearchEntitiesScope({
+    searchContext: searchContext ?? { entityTypes: [] },
+    searchScope,
+    setInputValues: setInputValues as (value: { key: string, values: string[], operator?: string }[]) => void,
+    availableEntityTypes,
+    availableRelationshipTypes,
+    allEntityTypes,
+  });
+  FiltersHelpersUtil.setHandleAddFilter(handleAddFilter);
+  FiltersHelpersUtil.setHandleRemoveFilter(handleRemoveFilter);
   const handleOpenFilters = (event: React.SyntheticEvent) => {
     setOpen(true);
     setAnchorEl(event.currentTarget);

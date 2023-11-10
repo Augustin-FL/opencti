@@ -106,6 +106,7 @@ import useAuth from '../../../utils/hooks/useAuth';
 import TopMenuThreatActorIndividual from './TopMenuThreatActorIndividual';
 import { useSettingsMessagesBannerHeight } from '../settings/settings_messages/SettingsMessagesBanner';
 import useQueryLoading from '../../../utils/hooks/useQueryLoading';
+import { FiltersVariant } from '../../../utils/filters/filtersUtils';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   appBar: {
@@ -407,7 +408,7 @@ const TopBarComponent: FunctionComponent<TopBarProps> = ({
                   variant="topBar"
                 />
                 <Filters
-                  variant="dialog"
+                  variant={FiltersVariant.dialog}
                   availableFilterKeys={[
                     'entity_type',
                     'objectLabel',
