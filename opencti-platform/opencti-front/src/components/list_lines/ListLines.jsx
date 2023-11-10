@@ -66,8 +66,11 @@ const styles = (theme) => ({
     padding: '0 0 0 0',
   },
   parameters: {
-    float: 'left',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
     marginTop: -10,
+    flexWrap: 'wrap'
   },
   parametersWithPadding: {
     padding: '0 0 0 15px',
@@ -144,7 +147,7 @@ class ListLines extends Component {
         <div
           key={field}
           className={classes.sortableHeaderItem}
-          style={{ width, paddingTop: handleToggleSelectAll ? 3 : 0 }}
+          style={{ width }}
           onClick={this.reverseBy.bind(this, field)}
         >
           <div className={classes.headerItemText}>{t(label)}</div>
@@ -229,7 +232,7 @@ class ListLines extends Component {
             }
           >
             {typeof handleSearch === 'function' && (
-              <div style={{ float: 'left', marginRight: 20 }}>
+              <div>
                 <SearchInput
                   variant={searchVariant || 'small'}
                   onSubmit={handleSearch.bind(this)}
@@ -270,7 +273,7 @@ class ListLines extends Component {
           </div>
         )}
         <div className={classes.views}>
-          <div style={{ float: 'right', marginTop: -20 }}>
+          <div>
             {numberOfElements && (
               <div
                 style={

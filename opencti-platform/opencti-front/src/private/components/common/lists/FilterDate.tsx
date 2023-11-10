@@ -1,7 +1,7 @@
-import React, { FunctionComponent, KeyboardEvent } from 'react';
+import React, {FunctionComponent, KeyboardEvent} from 'react';
 import TextField from '@mui/material/TextField';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useFormatter } from '../../../../components/i18n';
+import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import {useFormatter} from '../../../../components/i18n';
 
 interface FilterDateProps {
   defaultHandleAddFilter: (
@@ -17,15 +17,19 @@ interface FilterDateProps {
 }
 
 const FilterDate: FunctionComponent<FilterDateProps> = ({
-  defaultHandleAddFilter,
-  filterKey,
-  operator,
-  inputValues,
-  setInputValues,
-}) => {
-  const { t } = useFormatter();
-
-  const findFilterFromKey = (filters: { key: string, values: (string | Date)[], operator?: string }[], key: string, op = 'eq') => {
+                                                          defaultHandleAddFilter,
+                                                          filterKey,
+                                                          operator,
+                                                          inputValues,
+                                                          setInputValues,
+                                                        }) => {
+  const {t} = useFormatter();
+  
+  const findFilterFromKey = (filters: {
+    key: string,
+    values: (string | Date)[],
+    operator?: string
+  }[], key: string, op = 'eq') => {
     for (const filter of filters) {
       if (filter.key === key) {
         if (filter.operator === op) {
@@ -35,19 +39,19 @@ const FilterDate: FunctionComponent<FilterDateProps> = ({
     }
     return null;
   };
-
+  
   const handleChangeDate = (date: Date) => {
-    const newInputValue = { key: filterKey, values: [date.toString()], operator };
+    const newInputValue = {key: filterKey, values: [date.toString()], operator};
     const newInputValues = inputValues.filter((f) => f.key !== filterKey || (operator && f.operator !== operator));
     setInputValues([...newInputValues, newInputValue]);
   };
-
+  
   const handleAcceptDate = (date: Date) => {
     if (date && date.toISOString()) {
       defaultHandleAddFilter(filterKey, date.toISOString(), operator);
     }
   };
-
+  
   const handleValidateDate = (event: KeyboardEvent<HTMLElement>) => {
     if (event.key === 'Enter') {
       const dateValue = findFilterFromKey(inputValues, filterKey, operator)?.values[0];

@@ -1,75 +1,65 @@
 import Button from '@mui/material/Button';
-import { FilterListOutlined } from '@mui/icons-material';
+import {FilterListOutlined} from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import Popover from '@mui/material/Popover';
 import Tooltip from '@mui/material/Tooltip';
-import { RayEndArrow, RayStartArrow } from 'mdi-material-ui';
+import {RayEndArrow, RayStartArrow} from 'mdi-material-ui';
 import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
-import { useFormatter } from '../../../../components/i18n';
-import { directFilters, inlineFilters } from '../../../../utils/filters/filtersUtils';
+import {useFormatter} from '../../../../components/i18n';
+import {directFilters, inlineFilters} from '../../../../utils/filters/filtersUtils';
 import FilterAutocomplete from './FilterAutocomplete';
 import InlineFilters from './InlineFilters';
 
 const useStyles = makeStyles(() => ({
-  filters: {
-    float: 'left',
-    margin: '-3px 0 0 -5px',
-  },
   container: {
     width: 600,
     padding: 20,
   },
   autocomplete: {
-    float: 'left',
-    margin: '5px 10px 0 10px',
-    width: 200,
-  },
-  booleanFilter: {
-    float: 'left',
-    margin: '5px 10px 0 10px',
+    flex: '0 0 200px'
   },
 }));
 
 const ListFilters = ({
-  size,
-  fontSize,
-  handleOpenFilters,
-  handleCloseFilters,
-  open,
-  anchorEl,
-  noDirectFilters,
-  availableFilterKeys,
-  filterElement,
-  searchContext,
-  variant,
-  type,
-  inputValues,
-  setInputValues,
-  availableEntityTypes,
-  availableRelationshipTypes,
-  availableRelationFilterTypes,
-  allEntityTypes,
-  defaultHandleAddFilter,
-  defaultHandleRemoveFilter,
-  handleSwitchFilter,
-}) => {
-  const { t } = useFormatter();
+                       size,
+                       fontSize,
+                       handleOpenFilters,
+                       handleCloseFilters,
+                       open,
+                       anchorEl,
+                       noDirectFilters,
+                       availableFilterKeys,
+                       filterElement,
+                       searchContext,
+                       variant,
+                       type,
+                       inputValues,
+                       setInputValues,
+                       availableEntityTypes,
+                       availableRelationshipTypes,
+                       availableRelationFilterTypes,
+                       allEntityTypes,
+                       defaultHandleAddFilter,
+                       defaultHandleRemoveFilter,
+                       handleSwitchFilter,
+                     }) => {
+  const {t} = useFormatter();
   const classes = useStyles();
-  let icon = <FilterListOutlined fontSize={fontSize || 'medium'} />;
+  let icon = <FilterListOutlined fontSize={fontSize || 'medium'}/>;
   let tooltip = t('Filters');
   let color = 'primary';
   if (type === 'from') {
-    icon = <RayStartArrow fontSize={fontSize || 'medium'} />;
+    icon = <RayStartArrow fontSize={fontSize || 'medium'}/>;
     tooltip = t('Dynamic source filters');
     color = 'warning';
   } else if (type === 'to') {
-    icon = <RayEndArrow fontSize={fontSize || 'medium'} />;
+    icon = <RayEndArrow fontSize={fontSize || 'medium'}/>;
     tooltip = t('Dynamic target filters');
     color = 'success';
   }
   return (
-    <div className={classes.filters}>
+    <>
       {variant === 'text' ? (
         <Tooltip title={tooltip}>
           <Button
@@ -78,7 +68,6 @@ const ListFilters = ({
             onClick={handleOpenFilters}
             startIcon={icon}
             size="small"
-            style={{ float: 'left', margin: '0 15px 0 7px' }}
           >
             {t('Filters')}
           </Button>
@@ -88,7 +77,6 @@ const ListFilters = ({
           <IconButton
             color={color}
             onClick={handleOpenFilters}
-            style={{ float: 'left', marginTop: -2 }}
             size={size || 'large'}
           >
             {icon}
@@ -96,7 +84,7 @@ const ListFilters = ({
         </Tooltip>
       )}
       <Popover
-        classes={{ paper: classes.container }}
+        classes={{paper: classes.container}}
         open={open}
         anchorEl={anchorEl}
         onClose={handleCloseFilters}
@@ -118,7 +106,7 @@ const ListFilters = ({
           (filterKey) => {
             if (inlineFilters.includes(filterKey)) {
               return (
-                <div className={classes.booleanFilter} key={filterKey}>
+                <div key={filterKey}>
                   <InlineFilters
                     filterKey={filterKey}
                     defaultHandleRemoveFilter={defaultHandleRemoveFilter}
@@ -145,8 +133,7 @@ const ListFilters = ({
             );
           },
         )}
-      <div className="clearfix" />
-    </div>
+    </>
   );
 };
 

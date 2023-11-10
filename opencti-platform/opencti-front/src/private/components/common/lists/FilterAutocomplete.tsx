@@ -24,7 +24,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
   },
 }));
 
-interface OptionValue extends Option {
+export interface OptionValue extends Option {
   type: string;
   parentTypes: string[];
   group?: string;
@@ -49,18 +49,19 @@ interface FilterAutocompleteProps {
   openOnFocus?: boolean;
 }
 
-const FilterAutocomplete: FunctionComponent<FilterAutocompleteProps> = ({
-  filterKey,
-  searchContext,
-  defaultHandleAddFilter,
-  inputValues,
-  setInputValues,
-  availableEntityTypes,
-  availableRelationshipTypes,
-  availableRelationFilterTypes,
-  allEntityTypes,
-  openOnFocus,
-}) => {
+const FilterAutocomplete: FunctionComponent<FilterAutocompleteProps> = (props) => {
+  const {
+    filterKey,
+    searchContext,
+    defaultHandleAddFilter,
+    inputValues,
+    setInputValues,
+    availableEntityTypes,
+    availableRelationshipTypes,
+    availableRelationFilterTypes,
+    allEntityTypes,
+    openOnFocus,
+  } = props;
   const { t } = useFormatter();
   const classes = useStyles();
   const [searchScope, setSearchScope] = useState<Record<string, string[]>>(

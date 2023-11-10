@@ -301,6 +301,15 @@ interface EntityWithLabelValue {
   type: string;
 }
 
+export interface SearchEntitiesProps {
+  availableEntityTypes?: string[];
+  availableRelationshipTypes?: string[];
+  searchContext: { entityTypes: string[]; elementId?: string[] };
+  searchScope: Record<string, string[]>;
+  setInputValues: (value: { key: string, values: string[], operator?: string }[]) => void;
+  allEntityTypes?: boolean;
+}
+
 const useSearchEntities = ({
   availableEntityTypes,
   availableRelationshipTypes,
@@ -308,14 +317,7 @@ const useSearchEntities = ({
   searchScope,
   setInputValues,
   allEntityTypes,
-}: {
-  availableEntityTypes?: string[];
-  availableRelationshipTypes?: string[];
-  searchContext: { entityTypes: string[]; elementId?: string[] };
-  searchScope: Record<string, string[]>;
-  setInputValues: (value: { key: string, values: string[], operator?: string }[]) => void;
-  allEntityTypes?: boolean;
-}) => {
+}: SearchEntitiesProps) => {
   const [entities, setEntities] = useState<Record<string, EntityValue[]>>({});
   const { t } = useFormatter();
   const { schema } = useAuth();

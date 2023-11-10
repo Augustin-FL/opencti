@@ -38,7 +38,6 @@ export const directFilters = [
   'is_read',
   'channel_types',
   'pattern_type',
-  'sightedBy',
   'container_type',
   'toSightingId',
   'x_opencti_negative',
@@ -233,7 +232,7 @@ export const filtersWithEntityType = (filters: FilterGroup | undefined, type: st
 
 // return the i18n label corresponding to a value
 export const filterValue = (filterKey: string, value?: string | null) => {
-  const { t, nsd } = useFormatter();
+  const {t, nsd} = useFormatter();
   if (booleanFilters.includes(filterKey) || inlineFilters.includes(filterKey)) { // TODO: improvement: boolean filters based on schema definition (not an enum)
     return t(value);
   }
