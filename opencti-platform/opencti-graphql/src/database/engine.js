@@ -2281,7 +2281,7 @@ export const elSearchFiles = async (context, user, options = {}) => {
     });
 };
 
-export const elDeleteFilesByIds = async (context, user, fileIds) => {
+export const elDeleteFilesByIds = async (fileIds) => {
   if (!fileIds) {
     return;
   }
@@ -2294,6 +2294,20 @@ export const elDeleteFilesByIds = async (context, user, fileIds) => {
     body: { query },
   }).catch((err) => {
     throw DatabaseError('[SEARCH] Error deleting files by ids', { error: err });
+  });
+};
+
+export const elDeleteAllFiles = async () => {
+  await elRawDeleteByQuery({
+    index: READ_INDEX_FILES,
+    refresh: true,
+    body: {
+      query: {
+        match_all: {},
+      }
+    },
+  }).catch((err) => {
+    throw DatabaseError('[SEARCH] Error deleting all files ', { error: err });
   });
 };
 // end index and search files
