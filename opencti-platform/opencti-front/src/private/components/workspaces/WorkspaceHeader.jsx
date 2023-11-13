@@ -101,7 +101,6 @@ const WorkspaceHeader = ({
   const classes = useStyles();
   const { t } = useFormatter();
   const [openTag, setOpenTag] = useState(false);
-  const [openTags, setOpenTags] = useState(false);
   const [newTag, setNewTag] = useState('');
   const userCanManage = workspace.currentUserAccessRight === 'admin';
   const userCanEdit = userCanManage || workspace.currentUserAccessRight === 'edit';
@@ -393,7 +392,7 @@ const WorkspaceHeader = ({
             <Button
               color="primary"
               aria-tag="More"
-              onClick={() => setOpenTags(!openTags)}
+              onClick={() => setOpenTag(!openTag)}
               style={{ fontSize: 14 }}
             >
               <DotsHorizontalCircleOutline />
