@@ -7585,6 +7585,7 @@ export type FilesMetrics = {
   __typename?: 'FilesMetrics';
   globalCount: Scalars['Int']['output'];
   globalSize: Scalars['Float']['output'];
+  metricsByMimeType?: Maybe<Array<MetricsByMimeType>>;
 };
 
 export enum FilterMode {
@@ -12854,6 +12855,13 @@ export type MessagesStats = {
   __typename?: 'MessagesStats';
   ack?: Maybe<Scalars['String']['output']>;
   ack_details?: Maybe<AckDetails>;
+};
+
+export type MetricsByMimeType = {
+  __typename?: 'MetricsByMimeType';
+  count: Scalars['Int']['output'];
+  mimeType: Scalars['String']['output'];
+  size: Scalars['Float']['output'];
 };
 
 export type Module = {
@@ -29613,6 +29621,7 @@ export type ResolversTypes = ResolversObject<{
   MemberEdge: ResolverTypeWrapper<MemberEdge>;
   MemberType: MemberType;
   MessagesStats: ResolverTypeWrapper<MessagesStats>;
+  MetricsByMimeType: ResolverTypeWrapper<MetricsByMimeType>;
   Module: ResolverTypeWrapper<Module>;
   MultiDistribution: ResolverTypeWrapper<MultiDistribution>;
   MultiTimeSeries: ResolverTypeWrapper<MultiTimeSeries>;
@@ -30405,6 +30414,7 @@ export type ResolversParentTypes = ResolversObject<{
   MemberConnection: MemberConnection;
   MemberEdge: MemberEdge;
   MessagesStats: MessagesStats;
+  MetricsByMimeType: MetricsByMimeType;
   Module: Module;
   MultiDistribution: MultiDistribution;
   MultiTimeSeries: MultiTimeSeries;
@@ -33069,6 +33079,7 @@ export type FileMetadataResolvers<ContextType = any, ParentType extends Resolver
 export type FilesMetricsResolvers<ContextType = any, ParentType extends ResolversParentTypes['FilesMetrics'] = ResolversParentTypes['FilesMetrics']> = ResolversObject<{
   globalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   globalSize?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  metricsByMimeType?: Resolver<Maybe<Array<ResolversTypes['MetricsByMimeType']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -34683,6 +34694,13 @@ export type MemberEdgeResolvers<ContextType = any, ParentType extends ResolversP
 export type MessagesStatsResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessagesStats'] = ResolversParentTypes['MessagesStats']> = ResolversObject<{
   ack?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   ack_details?: Resolver<Maybe<ResolversTypes['AckDetails']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type MetricsByMimeTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MetricsByMimeType'] = ResolversParentTypes['MetricsByMimeType']> = ResolversObject<{
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  mimeType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -39124,6 +39142,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   MemberConnection?: MemberConnectionResolvers<ContextType>;
   MemberEdge?: MemberEdgeResolvers<ContextType>;
   MessagesStats?: MessagesStatsResolvers<ContextType>;
+  MetricsByMimeType?: MetricsByMimeTypeResolvers<ContextType>;
   Module?: ModuleResolvers<ContextType>;
   MultiDistribution?: MultiDistributionResolvers<ContextType>;
   MultiTimeSeries?: MultiTimeSeriesResolvers<ContextType>;
