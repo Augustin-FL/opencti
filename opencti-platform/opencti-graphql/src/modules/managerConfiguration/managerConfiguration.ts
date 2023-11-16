@@ -28,10 +28,10 @@ const MANAGER_CONFIGURATION_DEFINITION: ModuleDefinition<StoreEntityManagerConfi
     },
   },
   attributes: [
-    { name: 'manager_id', type: 'string', mandatoryType: 'internal', multiple: false, upsert: false },
-    { name: 'manager_running', type: 'boolean', mandatoryType: 'internal', multiple: false, upsert: false },
-    { name: 'last_run_start_date', type: 'date', mandatoryType: 'internal', multiple: false, upsert: false },
-    { name: 'last_run_end_date', type: 'date', mandatoryType: 'internal', multiple: false, upsert: false },
+    { name: 'manager_id', type: 'string', mandatoryType: 'internal', editDefault: false, multiple: false, upsert: false },
+    { name: 'manager_running', type: 'boolean', mandatoryType: 'internal', editDefault: false, multiple: false, upsert: false },
+    { name: 'last_run_start_date', type: 'date', mandatoryType: 'internal', editDefault: false, multiple: false, upsert: false },
+    { name: 'last_run_end_date', type: 'date', mandatoryType: 'internal', editDefault: false, multiple: false, upsert: false },
   ],
   relations: [],
   representative: (stix: StixManagerConfiguration) => {
