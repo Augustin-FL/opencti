@@ -499,7 +499,6 @@ describe('Workspace resolver standard behavior', () => {
           containerEdit(id: $id) {
             knowledgeAddFromInvestigation(workspaceId: $workspaceId) {
               id
-              entity_type
             }
           }
         }
@@ -509,12 +508,10 @@ describe('Workspace resolver standard behavior', () => {
         workspaceId: workspaceInternalId,
       },
     });
-    const {
-      data: { containerEdit },
-    } = graphQLResponse;
-    expect(containerEdit.knowledgeAddFromInvestigation.id).toBeDefined();
+    expect(graphQLResponse).toBe('');
+    expect(graphQLResponse.data.containerEdit.knowledgeAddFromInvestigation.id).toBeDefined();
     expect(
-      containerEdit.knowledgeAddFromInvestigation.entity_type,
+      graphQLResponse.data.containerEdit.knowledgeAddFromInvestigation.entity_type,
     ).toBeDefined();
 
     // Delete the report
