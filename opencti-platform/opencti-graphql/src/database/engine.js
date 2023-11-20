@@ -636,6 +636,9 @@ const elCreateIndexTemplate = async (index) => {
             indexed_at: {
               type: 'date',
             },
+            uploaded_at: {
+              type: 'date',
+            },
             first_seen: {
               type: 'date',
             },
