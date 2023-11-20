@@ -75,9 +75,11 @@ const FileIndexingComponent: FunctionComponent<FileIndexingComponentProps> = ({
       {!isEnterpriseEdition && (
         <EnterpriseEdition />
       )}
-      <FileIndexingRequirements
-        isModuleWarning={isModuleWarning}
-      />
+      {isModuleWarning && (
+        <FileIndexingRequirements
+          isModuleWarning={isModuleWarning}
+        />
+      )}
       {isEnterpriseEdition && !isModuleWarning && managerConfigurationByManagerId && (
        <FileIndexingConfigurationAndMonitoring managerConfiguration={managerConfigurationByManagerId} />
       )}
