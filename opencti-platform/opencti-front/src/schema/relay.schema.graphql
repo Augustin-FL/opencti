@@ -11425,7 +11425,6 @@ input FeedbackAddInput {
   clientMutationId: String
   update: Boolean
   rating: Int
-  authorizedMembers: [MemberAccessInput!]
 }
 
 type DefaultValue {

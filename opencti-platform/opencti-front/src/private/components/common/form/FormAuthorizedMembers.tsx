@@ -38,7 +38,7 @@ const FormAuthorizedMembers = ({
 
   return (
     <Formik<FormAuthorizedMembersInputs>
-      enableReinitialize={true}
+      enableReinitialize
       initialValues={{
         authorizedMembers: existingAccessRules,
       }}

@@ -91,7 +91,7 @@ const AuthorizedMembersFieldListItem = ({
         name={name}
         sx={{ m: 1, minWidth: 120 }}
         inputProps={{ 'aria-label': 'Without label' }}
-        disabled={authorizedMember.value === me.id}
+        disabled={authorizedMember.value === me.id || !authorizedMember.label}
         size="small"
         disableUnderline
         onChange={(_: string, val: AccessRight) => onChange?.(val)}

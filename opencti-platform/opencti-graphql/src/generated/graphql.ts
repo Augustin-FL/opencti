@@ -7464,7 +7464,6 @@ export type FeedbackStixCoreRelationshipsDistributionArgs = {
 };
 
 export type FeedbackAddInput = {
-  authorizedMembers?: InputMaybe<Array<MemberAccessInput>>;
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   confidence?: InputMaybe<Scalars['Int']['input']>;
   content?: InputMaybe<Scalars['String']['input']>;

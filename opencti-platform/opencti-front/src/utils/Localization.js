@@ -2279,7 +2279,6 @@ const i18n = {
         'Todavía no se han configurado ninguna configuración',
       'Do you want to delete this CSV mapper ?':
         '¿Desea eliminar este mapeador CSV?',
-      'No default value for authorized members': 'Sin valor predeterminado para miembros autorizados',
       'Default values are applied only during entity creation. So only for entities created after default values have been set': 'Los valores predeterminados se aplican sólo durante la creación de la entidad. Entonces, solo para entidades creadas después de que se hayan establecido los valores predeterminados',
       'Activate/Deactivate authorized members': 'Activar/Desactivar miembros autorizados',
       'Attribute mapping configuration': 'Configuración de mapeo de atributos',
@@ -4566,7 +4565,6 @@ const i18n = {
         "Il n'y a pas encore de configurations définies",
       'Do you want to delete this CSV mapper ?':
         'Voulez-vous supprimer ce mappage CSV ?',
-      'No default value for authorized members': 'Aucune valeur par défaut pour les membres autorisés',
       'Default values are applied only during entity creation. So only for entities created after default values have been set': 'Les valeurs par défaut sont appliquées uniquement lors de la création d\'une entité. Donc uniquement pour les entités créées après que les valeurs par défaut aient été définies',
       'Activate/Deactivate authorized members': 'Activer/Désactiver les membres autorisés',
       'Attribute mapping configuration': 'Configuration de mappage d\'attributs',
@@ -6768,7 +6766,6 @@ const i18n = {
       'There are not any configurations set yet': 'まだ設定がありません',
       'Do you want to delete this CSV mapper ?':
         'このCSVマッパーを削除しますか？',
-      'No default value for authorized members': '承認されたメンバーのデフォルト値はありません',
       'Default values are applied only during entity creation. So only for entities created after default values have been set': 'デフォルト値はエンティティの作成時にのみ適用されます。したがって、デフォルト値が設定された後に作成されたエンティティのみが対象です',
       'Activate/Deactivate authorized members': '許可されたメンバーのアクティブ化/非アクティブ化',
       'Attribute mapping configuration': '属性マッピングの設定',
@@ -8861,7 +8858,6 @@ const i18n = {
       'Create a CSV Mapper configuration': '创建CSV映射配置',
       'There are not any configurations set yet': '目前尚未设置任何配置',
       'Do you want to delete this CSV mapper ?': '您要删除此CSV映射吗？',
-      'No default value for authorized members': '授权成员无默认值',
       'Default values are applied only during entity creation. So only for entities created after default values have been set': '默认值仅在实体创建期间应用。因此仅适用于设置默认值后创建的实体',
       'Activate/Deactivate authorized members': '激活/停用授权会员',
       'Attribute mapping configuration': '属性映射配置',

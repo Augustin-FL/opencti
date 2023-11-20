@@ -6,7 +6,6 @@ import { Field, FieldArray, FieldProps, Formik } from 'formik';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import { Add } from '@mui/icons-material';
-import DialogContentText from '@mui/material/DialogContentText';
 import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
 import React, { useState } from 'react';
@@ -42,7 +41,6 @@ export const isGenericOption = (memberId: string) => {
 export type AuthorizedMembersFieldValue = AuthorizedMemberOption[] | null;
 
 interface AuthorizedMembersFieldProps extends FieldProps<AuthorizedMembersFieldValue> {
-  emptyAccessListLabel?: string
   ownerId?: string
   showAllMembersLine?: boolean
   showCreatorLine?: boolean
@@ -72,7 +70,6 @@ const formikSchema = Yup.object().shape({
 const AuthorizedMembersField = ({
   form,
   field,
-  emptyAccessListLabel,
   ownerId,
   showAllMembersLine = false,
   showCreatorLine = false,
@@ -142,6 +139,7 @@ const AuthorizedMembersField = ({
   const changeApplyAccesses = (
     val: boolean,
     resetForm: FormikHelpers<AuthorizedMembersFieldInternalValue>['resetForm'],
+    setField: FormikHelpers<AuthorizedMembersFieldInternalValue>['setFieldValue'],
   ) => {
     setApplyAccesses(val);
     if (!val) {
@@ -155,6 +153,12 @@ const AuthorizedMembersField = ({
           creatorAccessRight: 'none',
         },
       });
+    } else if (showCreatorLine) {
+      setFieldValue(name, [{
+        ...creatorOption,
+        accessRight: 'admin',
+      }]);
+      setField('creatorAccessRight', 'admin');
     } else {
       setFieldValue(name, []);
     }
@@ -227,7 +231,7 @@ const AuthorizedMembersField = ({
         }}
         onSubmit={addAuthorizedMembers}
       >
-        {({ values, handleSubmit, isValid, dirty, resetForm }) => (
+        {({ values, handleSubmit, isValid, dirty, resetForm, setFieldValue: setField }) => (
           <>
             {canDeactivate && (
               <Field
@@ -235,71 +239,74 @@ const AuthorizedMembersField = ({
                 type="checkbox"
                 name="applyAccesses"
                 label={t('Activate/Deactivate authorized members')}
+                disabled={false}
                 onChange={(_: string, val: string) => {
-                  changeApplyAccesses(val === 'true', resetForm);
+                  changeApplyAccesses(val === 'true', resetForm, setField);
                 }}
               />
             )}
 
-            <Alert
-              sx={{
-                width: '100%',
-                '.MuiAlert-message': { width: '100%' },
-              }}
-              severity="info"
-              icon={false}
-              variant="outlined"
-            >
-              <AlertTitle>{t('Add new access')}</AlertTitle>
-              <div style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: 16,
-              }}>
-                <div style={{ flex: 1 }}>
-                  <ObjectMembersField
-                    name='newAccessMember'
+            {applyAccesses && (
+              <Alert
+                sx={{
+                  width: '100%',
+                  '.MuiAlert-message': { width: '100%' },
+                }}
+                severity="info"
+                icon={false}
+                variant="outlined"
+              >
+                <AlertTitle>{t('Add new access')}</AlertTitle>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: 16,
+                }}>
+                  <div style={{ flex: 1 }}>
+                    <ObjectMembersField
+                      name='newAccessMember'
+                      disabled={!values.applyAccesses}
+                    />
+                    {value?.find((a) => a.value === values.newAccessMember?.value) && (
+                      <FormHelperText style={{ position: 'absolute' }}>
+                        {t('Access already granted')}
+                      </FormHelperText>
+                    )}
+                  </div>
+                  <Field
+                    name='newAccessRight'
+                    component={SelectField}
+                    label={t('Access right')}
+                    style={{ m: 1, minWidth: 120 }}
+                    size="small"
                     disabled={!values.applyAccesses}
-                  />
-                  {value?.find((a) => a.value === values.newAccessMember?.value) && (
-                    <FormHelperText style={{ position: 'absolute' }}>
-                      {t('Access already granted')}
-                    </FormHelperText>
-                  )}
+                  >
+                    {accessRights.map((accessRight) => (
+                      <MenuItem
+                        value={accessRight.value}
+                        key={accessRight.value}
+                      >
+                        {accessRight.label}
+                      </MenuItem>
+                    ))}
+                  </Field>
+                  <IconButton
+                    color="secondary"
+                    aria-tag="More"
+                    onClick={() => handleSubmit()}
+                    disabled={
+                      !dirty
+                      || !isValid
+                      || value?.some((a) => a.value === values.newAccessMember?.value)
+                      || !values.applyAccesses
+                    }
+                    style={{ marginTop: 10 }}
+                  >
+                    <Add fontSize="small" />
+                  </IconButton>
                 </div>
-                <Field
-                  name='newAccessRight'
-                  component={SelectField}
-                  label={t('Access right')}
-                  style={{ m: 1, minWidth: 120 }}
-                  size="small"
-                  disabled={!values.applyAccesses}
-                >
-                  {accessRights.map((accessRight) => (
-                    <MenuItem
-                      value={accessRight.value}
-                      key={accessRight.value}
-                    >
-                      {accessRight.label}
-                    </MenuItem>
-                  ))}
-                </Field>
-                <IconButton
-                  color="secondary"
-                  aria-tag="More"
-                  onClick={() => handleSubmit()}
-                  disabled={
-                    !dirty
-                    || !isValid
-                    || value?.some((a) => a.value === values.newAccessMember?.value)
-                    || !values.applyAccesses
-                  }
-                  style={{ marginTop: 10 }}
-                >
-                  <Add fontSize="small" />
-                </IconButton>
-              </div>
-            </Alert>
+              </Alert>
+            )}
 
             {applyAccesses && (
               <>
@@ -314,12 +321,6 @@ const AuthorizedMembersField = ({
                 >
                   {t('Current members access')}
                 </Typography>
-
-                {(!value || value.length === 0) && emptyAccessListLabel && (
-                  <DialogContentText>
-                    {emptyAccessListLabel}
-                  </DialogContentText>
-                )}
 
                 <List sx={{ pb: 0 }}>
                   {showAllMembersLine && (
