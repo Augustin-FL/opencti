@@ -105,6 +105,15 @@ const WorkspaceHeader = ({
   const [newTag, setNewTag] = useState('');
   const userCanManage = workspace.currentUserAccessRight === 'admin';
   const userCanEdit = userCanManage || workspace.currentUserAccessRight === 'edit';
+  const [moreButtonClicked, setMoreButtonClicked] = useState(false);
+  const tags = R.propOr([], 'tags', workspace);
+
+  const handleOpenTag = () => {
+    setOpenTag(!openTag);
+    if (tags.length > 0) {
+      setMoreButtonClicked(true);
+    }
+  };
   const getCurrentTags = () => workspace.tags;
   const handleChangeNewTags = (event) => {
     const { value } = event.target;
@@ -131,25 +140,25 @@ const WorkspaceHeader = ({
     }
     setOpenTag(false);
     setNewTag('');
+    setMoreButtonClicked(false);
     resetForm();
   };
   const deleteTag = (tag) => {
     const currentTags = getCurrentTags();
-    const tags = R.filter((a) => a !== tag, currentTags);
+    const filteredTags = R.filter((a) => a !== tag, currentTags);
     commitMutation({
       mutation: workspaceMutation,
       variables: {
         id: workspace.id,
         input: {
           key: 'tags',
-          value: tags,
+          value: filteredTags,
         },
       },
       onCompleted: () => MESSAGING$.notifySuccess(t('The tag has been removed')),
     });
   };
 
-  const tags = R.propOr([], 'tags', workspace);
   const { relativeDate } = config ?? {};
 
   const [displayManageAccess, setDisplayManageAccess] = useState(false);
@@ -371,35 +380,46 @@ const WorkspaceHeader = ({
                 handleClose={handleCloseManageAccess}
               />
             </div>
-            <div className={classes.tags}>
-              {tags.length > 5 ? (
-                <Button
-                  color="primary"
-                  aria-tag="More"
-                  onClick={() => setOpenTag(!openTag)}
-                  style={{ fontSize: 14 }}
-                >
-                  <DotsHorizontalCircleOutline />
-                  &nbsp;&nbsp;{t('More')}
-                </Button>
-              ) : (
-                <Tooltip title={t('Add tag')}>
-                  <IconButton
-                    style={{ float: 'left', marginTop: -5 }}
-                    color={openTag ? 'primary' : 'secondary'}
-                    aria-tag="Tag"
-                    onClick={() => setOpenTag(!openTag)}
-                    size="large"
-                  >
-                    {openTag ? (
-                      <CloseOutlined fontSize="small" />
-                    ) : (
-                      <AddOutlined fontSize="small" />
-                    )}
-                  </IconButton>
-                </Tooltip>
+          </Security>
+            <div style={{ marginTop: moreButtonClicked ? '8px' : '-8px', float: 'right' }}>
+              {R.take(1, tags).map(
+                (tag) => tag.length > 0 && (
+                  <Chip
+                    key={tag}
+                    classes={{ root: classes.tag }}
+                    label={tag}
+                    onDelete={() => deleteTag(tag)}
+                  />
+                ),
               )}
               <Security needs={[EXPLORE_EXUPDATE]} hasAccess={userCanEdit}>
+                {tags.length > 1 ? (
+                  <Button
+                    color="primary"
+                    aria-tag="More"
+                    onClick={handleOpenTag}
+                    style={{ fontSize: 14, marginRight: '7px' }}
+                  >
+                    <DotsHorizontalCircleOutline />
+                    &nbsp;&nbsp;{t('More')}
+                  </Button>
+                ) : (
+                  <Tooltip title={t('Add tag')}>
+                    <IconButton
+                      style={{ float: 'left', marginTop: '-6px' }}
+                      color={openTag ? 'primary' : 'secondary'}
+                      aria-tag="Tag"
+                      onClick={handleOpenTag}
+                      size="large"
+                    >
+                      {openTag ? (
+                        <CloseOutlined fontSize="small" />
+                      ) : (
+                        <AddOutlined fontSize="small" />
+                      )}
+                    </IconButton>
+                  </Tooltip>
+                )}
                 <Slide
                   direction="left"
                   in={openTag}
@@ -411,7 +431,7 @@ const WorkspaceHeader = ({
                       initialValues={{ new_tag: '' }}
                       onSubmit={onSubmitCreateTag}
                     >
-                      <Form style={{ float: 'right' }}>
+                      <Form style={{ float: 'right', marginTop: '8px' }}>
                         <Field
                           component={TextField}
                           variant="standard"
@@ -428,7 +448,6 @@ const WorkspaceHeader = ({
                 </Slide>
               </Security>
             </div>
-          </Security>
           {variant === 'investigation' && (
             <WorkspaceTurnToContainerDialog
               workspace={workspace}
@@ -436,21 +455,6 @@ const WorkspaceHeader = ({
               handleClose={handleCloseTurnToReportOrCaseContainer}
             />
           )}
-          <div className="clearfix" />
-        </div>
-        <div style={{ margin: variant === 'dashboard' ? '0 20px 0 20px' : 0 }}>
-          <div style={{ float: 'right' }}>
-            {R.take(5, tags).map(
-              (tag) => tag.length > 0 && (
-                <Chip
-                  key={tag}
-                  classes={{ root: classes.tag }}
-                  label={tag}
-                  onDelete={() => deleteTag(tag)}
-                />
-              ),
-            )}
-          </div>
           <div className="clearfix" />
         </div>
       </>
