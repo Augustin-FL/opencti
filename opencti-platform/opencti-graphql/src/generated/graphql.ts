@@ -7244,7 +7244,7 @@ export enum FeedOrdering {
 
 export type Feedback = BasicObject & Case & Container & StixCoreObject & StixDomainObject & StixObject & {
   __typename?: 'Feedback';
-  authorizedMembers?: Maybe<Array<MemberAccess>>;
+  authorized_members?: Maybe<Array<MemberAccess>>;
   avatar?: Maybe<OpenCtiFile>;
   cases?: Maybe<CaseConnection>;
   confidence?: Maybe<Scalars['Int']['output']>;
@@ -7502,6 +7502,7 @@ export type FeedbackEdge = {
 
 export enum FeedbacksFilter {
   AssigneeTo = 'assigneeTo',
+  AuthorizedMembers = 'authorized_members',
   Confidence = 'confidence',
   Context = 'context',
   Created = 'created',
@@ -32978,7 +32979,7 @@ export type FeedMappingResolvers<ContextType = any, ParentType extends Resolvers
 }>;
 
 export type FeedbackResolvers<ContextType = any, ParentType extends ResolversParentTypes['Feedback'] = ResolversParentTypes['Feedback']> = ResolversObject<{
-  authorizedMembers?: Resolver<Maybe<Array<ResolversTypes['MemberAccess']>>, ParentType, ContextType>;
+  authorized_members?: Resolver<Maybe<Array<ResolversTypes['MemberAccess']>>, ParentType, ContextType>;
   avatar?: Resolver<Maybe<ResolversTypes['OpenCtiFile']>, ParentType, ContextType>;
   cases?: Resolver<Maybe<ResolversTypes['CaseConnection']>, ParentType, ContextType, Partial<FeedbackCasesArgs>>;
   confidence?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;

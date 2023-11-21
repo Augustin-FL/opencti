@@ -15,7 +15,7 @@ const feedbackResolvers: Resolvers = {
     },
   },
   Feedback: {
-    authorizedMembers: (feedback, _, context) => getAuthorizedMembers(context, context.user, feedback),
+    authorized_members: (feedback, _, context) => getAuthorizedMembers(context, context.user, feedback),
     currentUserAccessRight: (feedback, _, context) => getUserAccessRight(context.user, feedback),
   },
   FeedbacksFilter: {

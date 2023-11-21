@@ -3059,13 +3059,6 @@ const buildEntityData = async (context, user, input, type, opts = {}) => {
     }
     data = R.assoc(INTERNAL_IDS_ALIASES, generateAliasesIdsForInstance(data), data);
   }
-  // Authorized members
-  if (!R.isNil(input.authorizedMembers)) {
-    data = R.pipe(
-      R.assoc('authorized_members', input.authorizedMembers),
-      R.dissoc('authorizedMembers'),
-    )(data);
-  }
   // Create the meta relationships (ref, refs)
   const relToCreate = [];
   const isSegregationEntity = !STIX_ORGANIZATIONS_UNRESTRICTED.some((o) => getParentTypes(data.entity_type).includes(o));

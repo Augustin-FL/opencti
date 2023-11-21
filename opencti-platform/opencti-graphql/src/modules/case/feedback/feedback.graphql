@@ -139,7 +139,7 @@ type Feedback implements BasicObject & StixObject & StixCoreObject & StixDomainO
   objectParticipant: ParticipantConnection
   # Feedback
   rating: Int
-  authorizedMembers: [MemberAccess!]
+  authorized_members: [MemberAccess!]
   currentUserAccessRight: String
 }
 
@@ -176,6 +176,7 @@ enum FeedbacksFilter {
   rating
   confidence
   source_reliability
+  authorized_members
 }
 
 input FeedbacksFiltering {
