@@ -57,16 +57,17 @@ import ReactMde from 'react-mde';
 import SpeedDial from '@mui/material/SpeedDial';
 import { SpeedDialIcon } from '@mui/material';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
+import { graphql } from 'react-relay';
 import VisuallyHiddenInput from '../../common/VisuallyHiddenInput';
 import Transition from '../../../../components/Transition';
 import { useFormatter } from '../../../../components/i18n';
 import { ignoredAttributesInDashboards } from '../../../../utils/hooks/useAttributes';
 import Filters from '../../common/lists/Filters';
 import { isUniqFilter } from '../../../../utils/filters/filtersUtils';
-import { capitalizeFirstLetter, truncate } from '../../../../utils/String';
-import { QueryRenderer } from '../../../../relay/environment';
+import { capitalizeFirstLetter, toB64, truncate } from '../../../../utils/String';
+import { commitMutation, QueryRenderer } from '../../../../relay/environment';
 import { stixCyberObservablesLinesAttributesQuery } from '../../observations/stix_cyber_observables/StixCyberObservablesLines';
-import { isNotEmptyField } from '../../../../utils/utils';
+import { isNotEmptyField, readFileContent } from '../../../../utils/utils';
 import MarkdownDisplay from '../../../../components/MarkdownDisplay';
 
 const useStyles = makeStyles((theme) => ({
@@ -360,7 +361,19 @@ const visualizationTypes = [
 ];
 const indexedVisualizationTypes = R.indexBy(R.prop('key'), visualizationTypes);
 
-const WidgetConfig = ({ widget, onComplete, closeMenu }) => {
+const workspaceImportWidgetMutation = graphql`
+  mutation WidgetConfigImportMutation(
+    $id: ID!
+    $input: [EditInput!]!
+  ) {
+    workspaceImportWidget(id: $id, input: $input) {
+      manifest
+      ...Dashboard_workspace
+    }
+  }
+`;
+
+const WidgetConfig = ({ workspace, widget, onComplete, closeMenu }) => {
   let initialStep = 0;
   if (widget?.type === 'text') {
     initialStep = 3;
@@ -390,9 +403,23 @@ const WidgetConfig = ({ widget, onComplete, closeMenu }) => {
   );
   const [parameters, setParameters] = useState(widget?.parameters ?? {});
 
-  const handleWidgetImport = (event) => {
+  const handleWidgetImport = async (event) => {
     const importedWidget = event.target.files[0];
     console.log('importedWidget', importedWidget);
+    const jsonObject = await readFileContent(importedWidget);
+    console.log('jsonObject', jsonObject.configuration);
+    const manifest = toB64(JSON.stringify(jsonObject.configuration));
+    console.log('manifest', manifest);
+    commitMutation({
+      mutation: workspaceImportWidgetMutation,
+      variables: {
+        id: workspace.id,
+        input: {
+          key: 'manifest',
+          value: manifest,
+        },
+      },
+    });
   };
   const handleClose = () => {
     if (!widget) {

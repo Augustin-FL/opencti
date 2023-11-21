@@ -772,6 +772,7 @@ const DashboardComponent = ({ workspace, noToolbar }) => {
                 <WidgetPopover
                   widget={widget}
                   manifest={manifest}
+                  workspace={workspace}
                   onUpdate={handleUpdateWidget}
                   onDuplicate={handleDuplicateWidget}
                   onDelete={() => handleDeleteWidget(widget.id)}
@@ -832,7 +833,7 @@ const DashboardComponent = ({ workspace, noToolbar }) => {
           ))}
         </ReactGridLayout>
       )}
-      {!noToolbar && <WidgetConfig onComplete={handleAddWidget} />}
+      {!noToolbar && <WidgetConfig onComplete={handleAddWidget} workspace={workspace} />}
     </div>
   );
 };

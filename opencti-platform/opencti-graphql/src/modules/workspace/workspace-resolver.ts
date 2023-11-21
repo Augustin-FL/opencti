@@ -11,7 +11,7 @@ import {
   workspaceDelete,
   workspaceEditContext,
   workspaceEditField,
-  workspaceConfigurationImport,
+  workspaceConfigurationImport, addImportWidget,
 } from './workspace-domain';
 import { fetchEditContext, pubSubAsyncIterator } from '../../database/redis';
 import { BUS_TOPICS } from '../../config/conf';
@@ -58,6 +58,9 @@ const workspaceResolvers: Resolvers = {
     },
     workspaceConfigurationImport: (_, { file }, context) => {
       return workspaceConfigurationImport(context, context.user, file);
+    },
+    workspaceImportWidget: (_, { id, input }, context) => {
+      return addImportWidget(context, context.user, id, input);
     },
   },
   Subscription: {

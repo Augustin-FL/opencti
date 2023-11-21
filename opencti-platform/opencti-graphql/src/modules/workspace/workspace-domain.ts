@@ -192,3 +192,8 @@ export const workspaceConfigurationImport = async (context: AuthContext, user: A
   await notify(BUS_TOPICS[ENTITY_TYPE_WORKSPACE].ADDED_TOPIC, importWorkspaceCreation, user);
   return workspaceId;
 };
+
+export const addImportWidget = async (context: AuthContext, user: AuthUser, workspaceId: string, inputs: EditInput[]) => {
+  const { element } = await updateAttribute(context, user, workspaceId, ENTITY_TYPE_WORKSPACE, inputs);
+  return notify(BUS_TOPICS[ENTITY_TYPE_WORKSPACE].EDIT_TOPIC, element, user);
+};

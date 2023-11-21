@@ -96,6 +96,7 @@ type Mutation {
     workspaceContextPatch(id: ID!, input: EditContext!): Workspace
     workspaceContextClean(id: ID!): Workspace
     workspaceConfigurationImport(file: Upload!): String!
+    workspaceImportWidget(id: ID!, input: [EditInput!]!): Workspace @auth(for: [EXPLORE_EXUPDATE])
 }
 
 # Subscriptions

@@ -16,6 +16,7 @@ import { EXPLORE_EXUPDATE } from '../../../../utils/hooks/useGranted';
 import WidgetConfig from './WidgetConfig';
 import Transition from '../../../../components/Transition';
 import pjson from '../../../../../package.json';
+import { toB64 } from '../../../../utils/String';
 
 const useStyles = makeStyles({
   container: {
@@ -26,12 +27,13 @@ const useStyles = makeStyles({
   },
 });
 
-const StixCyberObservablePopover = ({
+const WidgetPopover = ({
   onUpdate,
   onDuplicate,
   widget,
   onDelete,
   manifest,
+  workspace,
 }) => {
   const classes = useStyles();
   const { t } = useFormatter();
@@ -46,7 +48,6 @@ const StixCyberObservablePopover = ({
     setDisplayDuplicate(true);
     setAnchorEl(null);
   };
-  console.log('manifest', manifest);
 
   const handleExportWidget = () => {
     const { id: _id, ...rest } = widget;
@@ -61,7 +62,6 @@ const StixCyberObservablePopover = ({
     console.log('widgetConfig', widgetConfig);
     fileDownload(blob, fileName, 'application/json');
   };
-  console.log('widget', widget);
   return (
     <div className={classes.container}>
       <IconButton
@@ -87,6 +87,7 @@ const StixCyberObservablePopover = ({
             closeMenu={() => setAnchorEl(null)}
             onComplete={onUpdate}
             widget={widget}
+            workspace={workspace}
           />
           <MenuItem onClick={handleExportWidget}>{t('Export JSON')}</MenuItem>
           <MenuItem onClick={handleOpenDuplicate}>{t('Duplicate')}</MenuItem>
@@ -145,4 +146,4 @@ const StixCyberObservablePopover = ({
   );
 };
 
-export default StixCyberObservablePopover;
+export default WidgetPopover;
