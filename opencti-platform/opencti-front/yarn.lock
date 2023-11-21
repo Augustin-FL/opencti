@@ -5356,7 +5356,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:18.2.7, @types/react-dom@npm:^18.0.0":
+"@types/react-dom@npm:18.2.16":
+  version: 18.2.16
+  resolution: "@types/react-dom@npm:18.2.16"
+  dependencies:
+    "@types/react": "*"
+  checksum: 0d79f6e121155003840414e3cb1f5d70eef3a7f03450f7837c806b319b9e737880e368def615e2bf49159ed4041899e77b1002902e1285dd656783d2a836eb73
+  languageName: node
+  linkType: hard
+
+"@types/react-dom@npm:^18.0.0":
   version: 18.2.7
   resolution: "@types/react-dom@npm:18.2.7"
   dependencies:
@@ -5442,7 +5451,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:16 || 17 || 18, @types/react@npm:18.2.22":
+"@types/react@npm:*, @types/react@npm:16 || 17 || 18":
   version: 18.2.22
   resolution: "@types/react@npm:18.2.22"
   dependencies:
@@ -5450,6 +5459,17 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: 44289523dabaadcd3fd85689abb98f9ebcc8492d7e978348d1c986138acef4801030b279e89a19e38a6319e294bcea77559e37e0c803e4bacf2b8ae3a56ba587
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:18.2.38":
+  version: 18.2.38
+  resolution: "@types/react@npm:18.2.38"
+  dependencies:
+    "@types/prop-types": "*"
+    "@types/scheduler": "*"
+    csstype: ^3.0.2
+  checksum: 71f8c167173d32252be8b2d3c1c76b3570b94d2fbbd139da86d146be453626f5777e12c2781559119637520dbef9f91cffe968f67b5901618f29226d49fad326
   languageName: node
   linkType: hard
 
@@ -14985,9 +15005,9 @@ __metadata:
     "@types/node": 20.8.6
     "@types/qrcode": 1.5.2
     "@types/ramda": 0.29.6
-    "@types/react": 18.2.22
+    "@types/react": 18.2.38
     "@types/react-csv": 1.1.8
-    "@types/react-dom": 18.2.7
+    "@types/react-dom": 18.2.16
     "@types/react-relay": 14.1.6
     "@types/react-router-dom": 5.3.3
     "@types/react-syntax-highlighter": 15.5.8
