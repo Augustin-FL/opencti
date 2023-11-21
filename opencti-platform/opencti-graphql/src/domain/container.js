@@ -151,7 +151,7 @@ export const containersObjectsOfObject = async (context, user, { id, types, filt
 
 export const filterUnwantedEntitiesOut = async ({ context, user, ids }) => {
   const filteredOutInvestigatedIds = [];
-  ids.forEach((id) => {
+  ids?.forEach((id) => {
     const entity = internalLoadById(context, user, id);
     if (!['Task', 'Note'].includes(entity.entity_type)) {
       filteredOutInvestigatedIds.push(entity.id);
@@ -162,7 +162,7 @@ export const filterUnwantedEntitiesOut = async ({ context, user, ids }) => {
 
 export const knowledgeAddFromInvestigation = async (context, user, { containerId, workspaceId }) => {
   const investigation = await findInvestigationById(context, user, workspaceId);
-  const ids = investigation.investigated_entities_ids.filter((id) => id !== containerId);
+  const ids = investigation.investigated_entities_ids?.filter((id) => id !== containerId);
   const toIds = await filterUnwantedEntitiesOut({ context, user, ids });
   const containerInput = { toIds, relationship_type: 'object' };
   return await stixCoreObjectAddRelations(context, user, containerId, containerInput);

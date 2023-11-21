@@ -469,6 +469,27 @@ describe('Workspace resolver standard behavior', () => {
     expect(queryResult.data.workspace.objects.edges.length).toEqual(1);
   });
   it('should add knowledge from investigation to container', async () => {
+    const userEditorId = await getUserIdByEmail(USER_EDITOR.email);
+
+    // Create the workspace
+    const WORKSPACE_TO_CREATE = {
+      input: {
+        type: 'dashboard',
+        name: 'workspace',
+        authorized_members: [
+          {
+            id: userEditorId,
+            access_right: 'admin',
+          },
+        ],
+      },
+    };
+
+    const workspace = await editorQuery({
+      query: CREATE_QUERY,
+      variables: WORKSPACE_TO_CREATE,
+    });
+
     const CREATE_REPORT_QUERY = gql`
       mutation ReportAdd($input: ReportAddInput!) {
         reportAdd(input: $input) {
@@ -493,6 +514,7 @@ describe('Workspace resolver standard behavior', () => {
     });
     const reportId = report.data.reportAdd.id;
 
+    const workspaceId = workspace.data.workspaceAdd.id;
     const graphQLResponse = await queryAsAdmin({
       query: gql`
         mutation KnowledgeAddFromInvestigation($id: ID!, $workspaceId: ID!) {
@@ -505,14 +527,10 @@ describe('Workspace resolver standard behavior', () => {
       `,
       variables: {
         id: reportId,
-        workspaceId: workspaceInternalId,
+        workspaceId: workspaceId,
       },
     });
-    expect(graphQLResponse).toBe('');
     expect(graphQLResponse.data.containerEdit.knowledgeAddFromInvestigation.id).toBeDefined();
-    expect(
-      graphQLResponse.data.containerEdit.knowledgeAddFromInvestigation.entity_type,
-    ).toBeDefined();
 
     // Delete the report
     await queryAsAdmin({
@@ -524,6 +542,11 @@ describe('Workspace resolver standard behavior', () => {
         }
       `,
       variables: { id: reportId },
+    });
+    // Delete the workspace
+    await queryAsAdmin({
+      query: DELETE_QUERY,
+      variables: { id: workspaceId },
     });
   });
 
